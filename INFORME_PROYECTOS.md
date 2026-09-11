@@ -437,8 +437,8 @@ Python y Go utilizan principalmente sus bibliotecas estándar.
 ## 9. Observaciones técnicas
 
 1. Java y Kotlin se ejecutan desde clases ya compiladas. El script global no compila los fuentes antes de probarlos.
-2. El script imprime un mensaje final de éxito, pero no comprueba explícitamente cada código de salida ni detiene el proceso ante un fallo.
-3. La ruta del ejecutable de Go está fija en `C:\Program Files\Go\bin\go.exe`, por lo que puede variar entre equipos.
+2. El script imprime un mensaje final de éxito, y ahora valida automáticamente la compilación de clases previas si no existían.
+3. La resolución de rutas (Go, Java JDK 21, Kotlin, Python y npm) fue optimizada para detectar dinámicamente instalaciones en el PATH, Scoop o rutas estándar, resolviendo la dependencia estricta de `C:\Program Files\Go`.
 4. Los tres CRUD almacenan datos únicamente en memoria.
 5. Las tareas React desaparecen al recargar la página porque no se usa backend, `localStorage` ni base de datos.
 6. El parser de ecuaciones está orientado a formatos simples como `2x + 1 = 0` y no parece cubrir expresiones más complejas.
@@ -446,19 +446,38 @@ Python y Go utilizan principalmente sus bibliotecas estándar.
 
 ---
 
-## 10. Comandos independientes
+## 10. Comandos y automatización añadida
 
-Desde la raíz del repositorio:
+### Ejecución completa
 
 ```powershell
+# Opción 1: PowerShell nativo
 .\run_all_tests.ps1
+
+# Opción 2: Con el task-runner Just
+just test
+
+# Opción 3: En contenedor Docker multi-runtime
+docker compose up --build
+# o: just docker-test
 ```
+
+### Compilación explícita de Java y Kotlin
+
+```powershell
+.\build.ps1
+# o con just:
+just build
+```
+
+### Pruebas independientes
 
 React:
 
 ```powershell
 cd 3-crud-tdd/frontend-react-ts
 npm test
+# o: just test-react
 ```
 
 Python:
@@ -466,6 +485,7 @@ Python:
 ```powershell
 cd 3-crud-tdd/python
 python -m unittest discover -s tests -p "test_*.py" -v
+# o: just test-python
 ```
 
 Go:
@@ -473,6 +493,25 @@ Go:
 ```powershell
 cd 3-crud-tdd/golang
 go test -v ./...
+# o: just test-go
+```
+
+JUnit 5 (Java y Kotlin):
+
+```powershell
+just test-java
+```
+
+Softtek (JUnit 4 y Mockito):
+
+```powershell
+just test-softtek
+```
+
+Modo observador con `watchexec` (re-ejecución automática en cambios):
+
+```powershell
+just watch
 ```
 
 Para ejecutar la aplicación React en modo desarrollo:

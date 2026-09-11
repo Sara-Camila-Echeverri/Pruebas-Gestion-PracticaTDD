@@ -1,0 +1,8 @@
+.git
+.gitignore
+tools/jdk-21
+tools/kotlinc
+3-crud-tdd/frontend-react-ts/node_modules
+1-junit5-running-tests/bin
+2-softtek-testing-unitario/bin
+*.log

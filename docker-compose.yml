@@ -1,0 +1,7 @@
+services:
+  test-runner:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: pruebas-gestion-tdd
+    restart: "no"

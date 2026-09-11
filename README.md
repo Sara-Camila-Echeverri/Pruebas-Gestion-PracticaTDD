@@ -58,22 +58,62 @@ Implementaciones completas de operaciones CRUD (Create, Read, Update, Delete) ap
 │   ├── python/                  # Python 3 + unittest
 │   └── golang/                  # Go + testing
 │
-├── tools/                       # Scripts auxiliares de dependencias
-├── run_all_tests.ps1            # Script para ejecutar toda la suite de pruebas
+├── tools/                       # Scripts auxiliares de dependencias y JARs
+├── build.ps1                    # Script para compilar proyectos Java y Kotlin
+├── run_all_tests.ps1            # Script para ejecutar toda la suite de pruebas (PowerShell)
+├── run_all_tests.sh             # Script para ejecutar toda la suite de pruebas (Linux/Bash/Docker)
+├── Dockerfile                   # Contenedor multi-runtime para ejecución aislada
+├── docker-compose.yml           # Configuración para ejecutar pruebas con Docker Compose
+├── Justfile                     # Tareas automatizadas con el task-runner Just
 └── .gitignore                   # Exclusión de binarios, node_modules y caches
 ```
 
 ---
 
-## Ejecución de las Pruebas
+## Compilación y Ejecución de las Pruebas
 
-Para ejecutar automáticamente todas las pruebas de todos los módulos en una sola instrucción, corre en PowerShell:
+### 1. Con PowerShell (Nativo Windows)
+
+- **Compilar código Java y Kotlin**:
+  ```powershell
+  .\build.ps1
+  ```
+
+- **Ejecutar todas las pruebas a la vez**:
+  ```powershell
+  .\run_all_tests.ps1
+  ```
+
+### 2. Con el task runner `just` (Recomendado)
+
+Si cuentas con `just` instalado:
 
 ```powershell
-.\run_all_tests.ps1
+just              # Lista todas las recetas disponibles
+just build        # Compila proyectos Java y Kotlin
+just test         # Ejecuta las 5 suites de pruebas completas
+just test-java    # Ejecuta solo JUnit 5 (Java y Kotlin)
+just test-softtek # Ejecuta solo Softtek (JUnit 4 + Mockito)
+just test-python  # Ejecuta solo Python (unittest)
+just test-go      # Ejecuta solo Go (testing)
+just test-react   # Ejecuta solo React (Vitest)
+just watch        # Modo observador continuo con watchexec
 ```
 
-O de forma independiente por tecnología:
+### 3. Con Docker (Entorno Aislado Multi-Runtime)
+
+Para correr todas las pruebas sin necesidad de instalar runtimes localmente:
+
+```bash
+# Con Docker Compose:
+docker compose up --build
+
+# O con Docker CLI:
+docker build -t pruebas-gestion-tdd .
+docker run --rm pruebas-gestion-tdd
+```
+
+### 4. De forma independiente por tecnología
 
 - **React / TypeScript (Frontend)**:
   ```powershell
@@ -89,4 +129,12 @@ O de forma independiente por tecnología:
   ```powershell
   cd 3-crud-tdd/golang
   go test -v ./...
+  ```
+- **Java / Kotlin (JUnit 5)**:
+  ```powershell
+  just test-java
+  ```
+- **Softtek (JUnit 4 + Mockito)**:
+  ```powershell
+  just test-softtek
   ```
